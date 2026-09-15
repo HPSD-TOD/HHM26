@@ -82,8 +82,12 @@
     .family-choice img { width:100%; height:auto; aspect-ratio:32/21; object-fit:contain; object-position:center; display:block; border-radius:10px; background:#1b1019; }
     .family-choice .choice-label { font-weight:850; padding-bottom:5px; }
     .family-match { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:20px; }
-    .listen-actions { display:flex; flex-wrap:wrap; gap:9px; align-items:center; margin:2px 0 4px; }
-    .sound-toggle:disabled { opacity:.45; cursor:not-allowed; }
+    .listen-actions { display:flex; flex-wrap:wrap; gap:9px; align-items:center; margin:8px 0 6px; }
+    .speech-control { width:100%; min-height:64px; border:3px solid var(--plum); background:white; color:var(--plum); border-radius:16px; padding:13px 18px; font-size:1.08rem; font-weight:900; box-shadow:0 5px 0 rgba(62,30,56,.18); }
+    .speech-control:hover { background:#fff8e7; }
+    .speech-control.is-playing { background:var(--plum); color:white; }
+    .speech-control.is-paused { background:var(--gold); color:#2b1727; border-color:#2b1727; }
+    .speech-control:disabled { opacity:.5; cursor:not-allowed; box-shadow:none; }
     .family-fact { font-size:1.12rem; }
     .family-stars { display:flex; flex-wrap:nowrap; gap:.06em; font-size:clamp(3rem,13vw,6rem); line-height:1; margin:10px 0 22px; }
     .family-stars span { color:#d8cab9; display:inline-block; transform:scale(.88); transition:color .2s ease,transform .2s ease,text-shadow .2s ease; }
@@ -94,8 +98,9 @@
     .meet-copy h2 { margin-bottom:9px; color:var(--plum); }
     .meet-fact { font-size:1.08rem; line-height:1.42; margin-bottom:14px; }
     .move-cue { border-left:6px solid var(--gold); background:#fff8e7; padding:12px 14px; border-radius:3px 12px 12px 3px; font-weight:800; line-height:1.35; }
-    .family-actions { display:flex; gap:10px; margin-top:16px; }
+    .family-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
     .family-actions button { flex:1; }
+    .family-actions .speech-control { flex:1 0 100%; }
     .result-number { font-size:clamp(4rem,16vw,7.8rem); line-height:.9; font-weight:900; color:var(--coral); letter-spacing:-.06em; }
     .result-of { color:var(--muted); font-weight:800; font-size:1.05rem; }
     .result-message { font-size:1.15rem; line-height:1.5; max-width:590px; margin-top:22px; }
