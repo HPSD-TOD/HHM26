@@ -234,6 +234,7 @@ const screens={
 };
 const progressTrack=document.getElementById('progressTrack');
 const progressBar=document.getElementById('progressBar');
+const homeButton=document.getElementById('homeButton');
 let game=[],index=0,score=0,answered=false;
 let familyGame=[],familyIndex=0,familyTarget=null;
 let activeUtterances=[],activeSpeechButton=null,activeSpeechState='idle';
@@ -245,7 +246,8 @@ function stopSpeech(){
   if(activeSpeechButton){setSpeechButton(activeSpeechButton,'idle');}
   activeUtterances=[];activeSpeechButton=null;activeSpeechState='idle';
 }
-function show(name){stopSpeech();Object.values(screens).forEach(s=>s.classList.remove('active'));screens[name].classList.add('active');progressTrack.hidden=name!=='quiz';window.scrollTo(0,0);}
+function show(name){stopSpeech();Object.values(screens).forEach(s=>s.classList.remove('active'));screens[name].classList.add('active');progressTrack.hidden=name!=='quiz';homeButton.hidden=name==='start';window.scrollTo(0,0);}
+function returnHome(){show('start');}
 
 function takeFromRotation(key,count,pool=people){
   const ids=pool.map(p=>p.id);let remaining;
@@ -347,17 +349,19 @@ function renderFamilyMatch(){
   const distractor=shuffle(people.filter(p=>p.id!==familyTarget.id))[0];const choices=shuffle([familyTarget,distractor]);
   const stage=document.getElementById('familyStage');stage.innerHTML='';
   const title=document.createElement('h2');title.textContent='Who did you just meet?';
-  const listen=document.createElement('div');listen.className='listen-actions';addSpeechButton(listen,[{text:'Who did you just meet? Find',lang:'en-US'},{text:familyTarget.name,lang:'es-MX'}]);
+  const listen=document.createElement('div');listen.className='listen-actions';addSpeechButton(listen,[{text:'Who did you just meet? Choose the picture you remember.',lang:'en-US'}]);
   const grid=document.createElement('div');grid.className='family-match';
   choices.forEach(person=>{const b=document.createElement('button');b.className='answer family-choice';b.dataset.correct=String(person.id===familyTarget.id);const img=document.createElement('img');img.src=person.photo;img.alt=person.name;const label=document.createElement('span');label.className='choice-label';label.textContent=person.name;b.append(img,label);b.addEventListener('click',()=>answerFamilyMatch(b));grid.appendChild(b);});
   stage.append(title,listen,grid);
 }
 function answerFamilyMatch(selected){
-  const buttons=[...document.querySelectorAll('.family-choice')];if(buttons.some(b=>b.disabled))return;
-  buttons.forEach(b=>{b.disabled=true;if(b.dataset.correct==='true')b.classList.add('correct');});
-  const correct=selected.dataset.correct==='true';if(!correct)selected.classList.add('incorrect');
+  if(selected.disabled)return;const buttons=[...document.querySelectorAll('.family-choice')];
+  const previous=document.getElementById('familyMatchFeedback');if(previous)previous.remove();
+  const correct=selected.dataset.correct==='true';
   const note=document.createElement('div');note.className='feedback show';note.tabIndex=-1;
-  const heading=document.createElement('strong');heading.textContent=correct?'You found them!':'Good looking—here they are!';
+  note.id='familyMatchFeedback';const heading=document.createElement('strong');
+  if(!correct){selected.classList.add('incorrect');selected.disabled=true;heading.textContent='Almost—take another look.';const prompt=document.createElement('p');prompt.className='family-fact';prompt.textContent='Choose the other picture when you are ready.';note.append(heading,prompt);document.getElementById('familyStage').appendChild(note);note.focus();return;}
+  buttons.forEach(b=>{b.disabled=true;if(b.dataset.correct==='true')b.classList.add('correct');});heading.textContent=`Yes—you remembered ${familyTarget.name}!`;
   const fact=document.createElement('p');fact.className='family-fact';fact.textContent=familyTarget.fact;
   const row=document.createElement('div');row.className='feedback-footer';const spacer=document.createElement('span');const nextButton=document.createElement('button');nextButton.className='secondary';nextButton.textContent=familyIndex===familyGame.length-1?'See my stars':'Meet the next artist';nextButton.addEventListener('click',nextFamily);row.append(spacer,nextButton);note.append(heading,fact,row);document.getElementById('familyStage').appendChild(note);note.focus();
 }
@@ -373,5 +377,7 @@ document.getElementById('startButton').addEventListener('click',startGame);
 document.getElementById('familyButton').addEventListener('click',startFamily);
 document.getElementById('nextButton').addEventListener('click',next);
 document.getElementById('replayButton').addEventListener('click',startGame);
+document.getElementById('resultFamilyButton').addEventListener('click',startFamily);
 document.getElementById('familyReplay').addEventListener('click',startFamily);
 document.getElementById('familyMain').addEventListener('click',startGame);
+homeButton.addEventListener('click',returnHome);

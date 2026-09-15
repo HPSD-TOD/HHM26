@@ -30,6 +30,7 @@
     .app { width:min(100%,760px); min-height:min(720px,calc(100vh - 40px)); background:var(--cream); border-radius:32px; box-shadow:var(--shadow); overflow:hidden; display:flex; flex-direction:column; position:relative; }
     .topbar { padding:18px 24px 14px; background:var(--white); border-bottom:1px solid #eadfd4; }
     .brandline { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .home-button { min-height:42px; padding:8px 14px; border-radius:12px; font-size:.92rem; white-space:nowrap; }
     .eyebrow { margin:0; color:var(--plum); font-weight:850; letter-spacing:.12em; text-transform:uppercase; font-size:.78rem; }
     .soundless { color:var(--muted); font-size:.78rem; }
     .progress-track { height:8px; margin-top:13px; background:#eadfd4; border-radius:999px; overflow:hidden; }
@@ -131,6 +132,7 @@
       <header class="topbar">
         <div class="brandline">
           <p class="eyebrow">Hyde Park School of Dance</p>
+          <button class="secondary home-button" id="homeButton" hidden>← Home</button>
         </div>
         <div class="progress-track" id="progressTrack" hidden aria-label="Quiz progress"><div class="progress-bar" id="progressBar"></div></div>
       </header>
@@ -152,9 +154,9 @@
 
         <section class="screen" id="familyResultScreen">
           <p class="eyebrow">Family Play complete</p>
-          <h2>You found all five pictures!</h2>
+          <h2>You met five dance leaders!</h2>
           <div class="family-stars" id="familyStars" aria-label="Five filled stars"><span aria-hidden="true">☆</span><span aria-hidden="true">☆</span><span aria-hidden="true">☆</span><span aria-hidden="true">☆</span><span aria-hidden="true">☆</span></div>
-          <p class="result-message">Hispanic artists have helped dance, lead companies, make rhythms and tell stories in many different ways.</p>
+          <p class="result-message">These Hispanic artists perform, create, lead and tell stories in many different ways.</p>
           <div class="result-actions"><button class="primary" id="familyReplay">Play Family Play again</button><button class="secondary" id="familyMain">Try the big quiz</button></div>
         </section>
 
@@ -180,7 +182,7 @@
           <p class="eyebrow">Your score</p>
           <div><span class="result-number" id="finalScore">0</span> <span class="result-of">/ 1,000</span></div>
           <p class="result-message" id="resultMessage"></p>
-          <div class="result-actions"><button class="primary" id="replayButton">Play again</button></div>
+          <div class="result-actions"><button class="primary" id="replayButton">Play the big quiz again</button><button class="secondary" id="resultFamilyButton">Try Family Play</button></div>
           <p class="footer-note">Every answer includes a learning note. Browse the Hispanic Heritage Month bulletin board to meet more featured artists.</p>
         </section>
       </main>
