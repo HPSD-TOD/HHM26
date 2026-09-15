@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#291526">
+  <meta name="description" content="A Hyde Park School of Dance quiz celebrating Hispanic artists who changed dance history.">
+  <title>Steps That Changed Dance</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23291526'/%3E%3Cpath d='M12 45c12-4 15-25 28-25 7 0 8 7 12 7' fill='none' stroke='%23F3B63F' stroke-width='7' stroke-linecap='round'/%3E%3Ccircle cx='19' cy='18' r='6' fill='%23F0442E'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --ink:#291526; --plum:#71365b; --coral:#f0442e; --gold:#f3b63f;
+      --cream:#fff8ed; --white:#fffdfa; --muted:#685c65; --green:#167552;
+      --shadow:0 22px 60px rgba(19,8,18,.28); --radius:24px;
+    }
+    * { box-sizing:border-box; }
+    html { min-height:100%; background:var(--ink); }
+    body { margin:0; min-height:100vh; color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:
+      radial-gradient(circle at 8% 10%, rgba(240,68,46,.34), transparent 28%),
+      radial-gradient(circle at 92% 88%, rgba(243,182,63,.22), transparent 27%),
+      linear-gradient(145deg,#1e101d,#43203a 58%,#291526); }
+    button, input { font:inherit; }
+    button { cursor:pointer; }
+    .skip-link { position:absolute; left:-9999px; top:0; background:white; padding:10px; z-index:20; }
+    .skip-link:focus { left:10px; }
+    .shell { min-height:100vh; display:grid; place-items:center; padding:20px; position:relative; overflow:hidden; }
+    .orbit { position:fixed; border:2px solid rgba(255,255,255,.09); border-radius:50%; pointer-events:none; }
+    .orbit.one { width:420px; height:420px; left:-180px; top:35%; }
+    .orbit.two { width:560px; height:560px; right:-280px; top:-180px; border-color:rgba(243,182,63,.14); }
+    .app { width:min(100%,760px); min-height:min(720px,calc(100vh - 40px)); background:var(--cream); border-radius:32px; box-shadow:var(--shadow); overflow:hidden; display:flex; flex-direction:column; position:relative; }
+    .topbar { padding:18px 24px 14px; background:var(--white); border-bottom:1px solid #eadfd4; }
+    .brandline { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .eyebrow { margin:0; color:var(--plum); font-weight:850; letter-spacing:.12em; text-transform:uppercase; font-size:.78rem; }
+    .soundless { color:var(--muted); font-size:.78rem; }
+    .progress-track { height:8px; margin-top:13px; background:#eadfd4; border-radius:999px; overflow:hidden; }
+    .progress-bar { height:100%; width:0; background:linear-gradient(90deg,var(--coral),var(--gold)); transition:width .35s ease; }
+    main { flex:1; display:flex; flex-direction:column; }
+    .screen { display:none; flex:1; padding:clamp(24px,5vw,48px); animation:rise .32s ease; }
+    .screen.active { display:flex; flex-direction:column; }
+    @keyframes rise { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+    h1,h2,p { margin-top:0; }
+    h1 { font-size:clamp(2.6rem,9vw,5rem); line-height:.92; letter-spacing:-.055em; margin-bottom:22px; color:var(--plum); max-width:650px; }
+    h1 span { color:var(--coral); display:block; }
+    h2 { font-size:clamp(1.65rem,5vw,2.45rem); line-height:1.08; letter-spacing:-.025em; }
+    .intro { font-size:clamp(1.05rem,2.8vw,1.3rem); line-height:1.5; max-width:590px; color:#493d45; }
+    .start-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:end; margin-top:auto; }
+    .facts { display:flex; flex-wrap:wrap; gap:8px; margin:22px 0 0; padding:0; list-style:none; }
+    .facts li { border:1px solid #dccdc1; background:#fffaf3; border-radius:999px; padding:8px 12px; font-weight:750; font-size:.88rem; }
+    .primary { border:0; border-radius:999px; padding:16px 25px; background:var(--coral); color:white; font-weight:850; min-height:54px; box-shadow:0 8px 0 #b52d20; transition:transform .15s,box-shadow .15s; }
+    .primary:hover { transform:translateY(-2px); box-shadow:0 10px 0 #b52d20; }
+    .primary:active { transform:translateY(4px); box-shadow:0 4px 0 #b52d20; }
+    .primary:focus-visible,.answer:focus-visible,.secondary:focus-visible,input:focus-visible { outline:4px solid rgba(26,116,180,.45); outline-offset:3px; }
+    .question-meta { display:flex; justify-content:space-between; gap:16px; margin-bottom:16px; font-weight:800; color:var(--muted); }
+    .value-pill { color:var(--plum); background:#ebdce6; padding:5px 10px; border-radius:999px; }
+    .answers { display:grid; gap:12px; margin-top:24px; }
+    .answer { width:100%; min-height:58px; border:2px solid #dfd1c6; border-radius:16px; padding:14px 17px; background:white; color:var(--ink); text-align:left; font-weight:750; font-size:1rem; transition:border-color .15s,transform .15s,background .15s; }
+    .answer:hover:not(:disabled) { border-color:var(--plum); transform:translateX(3px); }
+    .answer.match-answer { padding:12px 15px; }
+    .pair-row { display:grid; grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr); align-items:center; gap:7px; padding:5px 0; }
+    .pair-row + .pair-row { border-top:1px solid #eadfd4; }
+    .pair-name { color:var(--plum); font-weight:850; }
+    .pair-arrow { color:var(--coral); text-align:center; font-weight:900; }
+    .pair-value { font-weight:750; }
+    .answer.correct { border-color:var(--green); background:#e9f7f1; }
+    .answer.incorrect { border-color:#b82d24; background:#fff0ed; }
+    .answer:disabled { cursor:default; color:var(--ink); opacity:1; }
+    .quiz-person { display:grid; grid-template-columns:112px 1fr; gap:16px; align-items:center; margin-bottom:20px; padding:10px; border-radius:18px; background:#291526; color:white; }
+    .quiz-person img { width:112px; height:86px; object-fit:cover; border-radius:12px; background:#120a11; }
+    .quiz-person h3 { margin:4px 0 0; font-size:1.45rem; line-height:1.05; }
+    .quiz-person .artist-style { color:#ffd77a; font-size:.76rem; font-weight:850; letter-spacing:.1em; text-transform:uppercase; }
+    .photo-credit { display:block; margin:6px 0 0; color:var(--muted); font-size:.75rem; line-height:1.25; }
+    .quiz-person .photo-credit { color:#d8c9d3; }
+    .feedback { display:none; margin-top:22px; border-left:7px solid var(--gold); background:#fffdf8; padding:18px 20px; border-radius:4px 16px 16px 4px; }
+    .feedback.show { display:block; animation:rise .25s ease; }
+    .feedback strong { display:block; font-size:1.05rem; margin-bottom:6px; }
+    .feedback p { margin-bottom:0; line-height:1.45; }
+    .feedback-footer { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-top:18px; }
+    .source-link { color:var(--plum); font-weight:750; font-size:.9rem; }
+    .secondary { border:2px solid var(--plum); color:var(--plum); background:white; border-radius:999px; padding:12px 18px; font-weight:850; }
+    .mode-button { min-height:76px; border-radius:20px; font-size:1.05rem; }
+    .family-choice { min-height:170px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:9px; text-align:center; padding:8px; overflow:hidden; }
+    .family-choice img { width:100%; height:auto; aspect-ratio:32/21; object-fit:contain; object-position:center; display:block; border-radius:10px; background:#1b1019; }
+    .family-choice .choice-label { font-weight:850; padding-bottom:5px; }
+    .family-match { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:20px; }
+    .listen-actions { display:flex; flex-wrap:wrap; gap:9px; align-items:center; margin:2px 0 4px; }
+    .sound-toggle:disabled { opacity:.45; cursor:not-allowed; }
+    .family-fact { font-size:1.12rem; }
+    .family-stars { display:flex; flex-wrap:nowrap; gap:.06em; font-size:clamp(3rem,13vw,6rem); line-height:1; margin:10px 0 22px; }
+    .family-stars span { color:#d8cab9; display:inline-block; transform:scale(.88); transition:color .2s ease,transform .2s ease,text-shadow .2s ease; }
+    .family-stars span.filled { color:var(--gold); transform:scale(1); text-shadow:0 3px 0 #b77900,0 0 18px rgba(243,182,63,.62); }
+    .meet-card { background:white; border:1px solid #dfd1c6; border-radius:22px; overflow:hidden; }
+    .meet-photo { width:100%; height:clamp(210px,40vh,320px); object-fit:contain; display:block; background:#1b1019; }
+    .meet-copy { padding:18px 20px 20px; }
+    .meet-copy h2 { margin-bottom:9px; color:var(--plum); }
+    .meet-fact { font-size:1.08rem; line-height:1.42; margin-bottom:14px; }
+    .move-cue { border-left:6px solid var(--gold); background:#fff8e7; padding:12px 14px; border-radius:3px 12px 12px 3px; font-weight:800; line-height:1.35; }
+    .family-actions { display:flex; gap:10px; margin-top:16px; }
+    .family-actions button { flex:1; }
+    .result-number { font-size:clamp(4rem,16vw,7.8rem); line-height:.9; font-weight:900; color:var(--coral); letter-spacing:-.06em; }
+    .result-of { color:var(--muted); font-weight:800; font-size:1.05rem; }
+    .result-message { font-size:1.15rem; line-height:1.5; max-width:590px; margin-top:22px; }
+    .initials-box { margin-top:22px; background:white; border:1px solid #dfd1c6; border-radius:18px; padding:18px; }
+    .initials-box label { display:block; font-weight:850; margin-bottom:9px; }
+    .initial-row { display:flex; gap:10px; }
+    #initials { width:112px; text-transform:uppercase; letter-spacing:.18em; border:2px solid #cdbdb2; border-radius:12px; padding:12px; font-weight:900; font-size:1.05rem; }
+    .micro { color:var(--muted); font-size:.82rem; line-height:1.4; margin:9px 0 0; }
+    .status { min-height:20px; color:#a72820; font-weight:750; font-size:.86rem; margin-top:7px; }
+    .result-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
+    .leaderboard { width:100%; border-collapse:collapse; margin-top:16px; background:white; border-radius:16px; overflow:hidden; }
+    .leaderboard th,.leaderboard td { padding:12px 14px; border-bottom:1px solid #eadfd4; text-align:left; }
+    .leaderboard th:last-child,.leaderboard td:last-child { text-align:right; }
+    .leaderboard tr:last-child td { border:0; }
+    .rank { color:var(--coral); font-weight:900; width:52px; }
+    .empty { padding:28px; text-align:center; background:white; border-radius:16px; color:var(--muted); }
+    .footer-note { margin-top:auto; padding-top:22px; color:var(--muted); font-size:.82rem; }
+    [hidden] { display:none !important; }
+    @media (max-width:620px) {
+      .shell { padding:0; }
+      .app { min-height:100vh; border-radius:0; }
+      .screen { padding:26px 20px 30px; }
+      .topbar { padding:15px 20px 12px; }
+      .start-grid { grid-template-columns:1fr; align-items:stretch; }
+      .family-choice { min-height:128px; }
+      .quiz-person { grid-template-columns:88px 1fr; }
+      .quiz-person img { width:88px; height:76px; }
+      .family-actions { flex-direction:column; }
+      .primary { width:100%; }
+      .feedback-footer { align-items:flex-end; }
+      .initial-row { flex-wrap:wrap; }
+      .initial-row .secondary { flex:1; }
+    }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to quiz</a>
+  <div class="shell">
+    <div class="orbit one"></div><div class="orbit two"></div>
+    <section class="app" aria-label="Steps That Changed Dance quiz">
+      <header class="topbar">
+        <div class="brandline">
+          <p class="eyebrow">Hyde Park School of Dance</p>
+        </div>
+        <div class="progress-track" id="progressTrack" hidden aria-label="Quiz progress"><div class="progress-bar" id="progressBar"></div></div>
+      </header>
+      <main id="content">
+        <section class="screen active" id="startScreen">
+          <p class="eyebrow">Hispanic Heritage Month</p>
+          <h1>Steps That <span>Changed Dance</span></h1>
+          <p class="intro">Eight quick questions about Hispanic dancers, choreographers and leaders whose work reaches across ballet, modern dance, Broadway, flamenco and more.</p>
+          <div class="start-grid">
+            <button class="primary mode-button" id="startButton">Play the 8-question quiz</button>
+            <button class="secondary mode-button" id="familyButton">Family Play: meet, move + match</button>
+          </div>
+        </section>
+
+        <section class="screen" id="familyScreen" aria-live="polite">
+          <div class="question-meta"><span id="familyCount">Artist 1 of 5</span><span class="value-pill">Family Play</span></div>
+          <div id="familyStage"></div>
+        </section>
+
+        <section class="screen" id="familyResultScreen">
+          <p class="eyebrow">Family Play complete</p>
+          <h2>You found all five pictures!</h2>
+          <div class="family-stars" id="familyStars" aria-label="Five filled stars"><span aria-hidden="true">☆</span><span aria-hidden="true">☆</span><span aria-hidden="true">☆</span><span aria-hidden="true">☆</span><span aria-hidden="true">☆</span></div>
+          <p class="result-message">Hispanic artists have helped dance, lead companies, make rhythms and tell stories in many different ways.</p>
+          <div class="result-actions"><button class="primary" id="familyReplay">Play Family Play again</button><button class="secondary" id="familyMain">Try the big quiz</button></div>
+        </section>
+
+        <section class="screen" id="quizScreen" aria-live="polite">
+          <div class="question-meta"><span id="questionCount">Question 1 of 8</span><span class="value-pill" id="pointValue">125 points</span></div>
+          <div class="quiz-person">
+            <img id="questionPhoto" alt="">
+            <div><span class="artist-style" id="questionStyle"></span><h3 id="questionName"></h3><small class="photo-credit" id="questionCredit"></small></div>
+          </div>
+          <h2 id="questionText"></h2>
+          <div class="answers" id="answers"></div>
+          <div class="feedback" id="feedback" tabindex="-1">
+            <strong id="feedbackTitle"></strong>
+            <p id="feedbackText"></p>
+            <div class="feedback-footer">
+              <a class="source-link" id="sourceLink" target="_blank" rel="noopener">Source</a>
+              <button class="secondary" id="nextButton">Next</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" id="resultScreen">
+          <p class="eyebrow">Your score</p>
+          <div><span class="result-number" id="finalScore">0</span> <span class="result-of">/ 1,000</span></div>
+          <p class="result-message" id="resultMessage"></p>
+          <div class="initials-box" id="initialsBox">
+            <label for="initials">Add your initials to this device's leaderboard</label>
+            <div class="initial-row"><input id="initials" maxlength="3" inputmode="text" autocomplete="off" aria-describedby="initialHelp"><button class="secondary" id="saveScore">Save score</button></div>
+            <p class="micro" id="initialHelp">Use 2-3 letters only. Do not enter a full name. This prototype does not share scores between devices.</p>
+            <div class="status" id="initialStatus" role="status"></div>
+          </div>
+          <div class="result-actions"><button class="primary" id="replayButton">Play again</button><button class="secondary" id="leaderboardButton">View leaderboard</button></div>
+          <p class="footer-note">Every answer includes a learning note. Browse the Hispanic Heritage Month bulletin board to meet more featured artists.</p>
+        </section>
+
+        <section class="screen" id="leaderboardScreen">
+          <p class="eyebrow">On this device</p>
+          <h2>Leaderboard</h2>
+          <div id="leaderboardContent"></div>
+          <div class="result-actions"><button class="primary" id="leaderReplay">Play again</button><button class="secondary" id="backToResults">Back to score</button></div>
+          <p class="footer-note">The shared Google Sites version will use a moderated Google Sheet leaderboard. This prototype stores only initials and scores in this browser.</p>
+        </section>
+      </main>
+    </section>
+  </div>
+    <script src="app.js"></script>
+    <script type="text/plain" id="legacyScript">
+    const questionBank = [
+      {level:'easy',points:100,q:'Who founded Ballet Hispánico in New York in 1970?',a:['Tina Ramirez','Alicia Alonso','Chita Rivera','Amalia Hernández'],correct:0,explain:'Tina Ramirez created Ballet Hispánico as a school and professional company, building opportunities for Hispanic and Latine artists in concert dance.',source:'https://www.ballethispanico.org/about/org/leadership-legacy/tina-ramirez-memorial/'},
+      {level:'easy',points:100,q:'José Limón is most closely connected to which area of dance history?',a:['American modern dance','Classical Indian dance','Competitive ballroom','Tap vaudeville'],correct:0,explain:'Mexican-born José Limón became a major figure in American modern dance. His company and movement approach continue to influence dancers worldwide.',source:'https://www.limon.nyc/legacy'},
+      {level:'easy',points:100,q:'Which artist helped build the company that became the National Ballet of Cuba?',a:['Alicia Alonso','Sara Baras','Blanca Li','María Pagés'],correct:0,explain:'Alicia Alonso helped establish a lasting Cuban ballet tradition while becoming internationally celebrated for roles including Giselle and Carmen.',source:'https://www.britannica.com/biography/Alicia-Alonso'},
+      {level:'easy',points:100,q:'Amalia Hernández founded a company celebrated for presenting which traditions on the concert stage?',a:['Mexican regional dance','Russian character dance','Irish step dance','American tap dance'],correct:0,explain:'Ballet Folklórico de México brought dances from many Mexican regions to large theatrical stages while helping build global recognition for those traditions.',source:'https://www.balletfolkloricodemexico.com.mx/'},
+      {level:'easy',points:100,q:'Carmen Amaya became internationally famous for which dance tradition?',a:['Flamenco','Classical ballet','Modern dance','Broadway tap'],correct:0,explain:'Carmen Amaya transformed flamenco performance through extraordinary rhythmic power and footwork, challenging gender conventions in movement and costuming.',source:'https://www.britannica.com/biography/Carmen-Amaya'},
+      {level:'easy',points:100,q:'Chita Rivera originated the Broadway role of Anita in which musical?',a:['West Side Story','The Wiz','A Chorus Line','Dreamgirls'],correct:0,explain:'Chita Rivera originated Anita in West Side Story and built a landmark Broadway career across more than six decades.',source:'https://www.kennedy-center.org/artists/r/ra-rn/chita-rivera/'},
+      {level:'easy',points:100,q:'Paloma Herrera danced for 24 years with which major ballet company?',a:['American Ballet Theatre','New York City Ballet','Alvin Ailey American Dance Theater','Ballet Hispánico'],correct:0,explain:'Argentine ballerina Paloma Herrera joined American Ballet Theatre as a teenager and became a principal dancer, performing with the company for 24 years.',source:'https://www.abt.org/people/paloma-herrera/'},
+      {level:'easy',points:100,q:'Carlos Acosta built an international career primarily in which form?',a:['Classical ballet','Flamenco','Tap','Ballroom'],correct:0,explain:'Cuban-born Carlos Acosta became an internationally acclaimed ballet dancer, then expanded his impact through choreography and artistic leadership.',source:'https://www.brb.org.uk/profile/carlos-acosta'},
+      {level:'easy',points:100,q:'Which featured artist was widely known as “La Argentina”?',a:['Antonia Mercé','Cristina Hoyos','Lucía Lacarra','Blanca Li'],correct:0,explain:'Antonia Mercé used the stage name La Argentina. She helped establish Spanish dance as a sophisticated concert art in the early twentieth century.',source:'https://www.britannica.com/biography/La-Argentina'},
+      {level:'easy',points:100,q:'Which featured flamenco artist founded her own company in 1998?',a:['Sara Baras','Carmen Amaya','María Pagés','Tamara Rojo'],correct:0,explain:'Sara Baras founded Ballet Flamenco Sara Baras in 1998 and has created original productions presented for audiences around the world.',source:'https://www.sarabaras.com/'},
+      {level:'easy',points:100,q:'Jennifer Lopez first gained national television attention dancing with which group?',a:['The Fly Girls','The Rockettes','The June Taylor Dancers','The Gold Diggers'],correct:0,explain:'Before her music and film career, Jennifer Lopez performed as a Fly Girl on In Living Color, making commercial dance an important part of her path.',source:'https://www.britannica.com/biography/Jennifer-Lopez'},
+
+      {level:'connection',points:150,format:'match',q:'Which option correctly matches all three artists with their fields?',a:['Alicia Alonso - ballet; José Limón - modern; Chita Rivera - Broadway','Alicia Alonso - tap; José Limón - ballet; Chita Rivera - flamenco','Alicia Alonso - Broadway; José Limón - tap; Chita Rivera - ballet','Alicia Alonso - modern; José Limón - Broadway; Chita Rivera - ballroom'],correct:0,explain:'Alicia Alonso became a ballet icon, José Limón helped shape modern dance and Chita Rivera built a landmark Broadway career.',source:'https://www.neh.gov/article/hispanic-heritage-and-history-united-states'},
+      {level:'connection',points:150,q:'Which pair correctly matches a founder with the institution she created?',a:['Tina Ramirez - Ballet Hispánico','Carmen Amaya - American Ballet Theatre','Chita Rivera - National Ballet of Cuba','Paloma Herrera - Ballet Folklórico de México'],correct:0,explain:'Tina Ramirez founded Ballet Hispánico in 1970. The organization developed into a professional company, school and cultural institution.',source:'https://www.ballethispanico.org/about/org/leadership-legacy/tina-ramirez-memorial/'},
+      {level:'connection',points:150,group:'gades-film',q:'A trilogy of dance films brought Antonio Gades’s choreography to international movie audiences. Which director collaborated with him?',a:['Carlos Saura','Steven Spielberg','Spike Lee','Alfred Hitchcock'],correct:0,explain:'Antonio Gades and Carlos Saura collaborated on the dance films Blood Wedding, Carmen and El amor brujo, bringing flamenco storytelling to movie audiences.',source:'https://fundacionantoniogades.com/en/antonio-gades/'},
+      {level:'connection',points:150,q:'What did Antonia Mercé, known as “La Argentina,” help establish?',a:['Spanish dance as a concert art','A television dance contest','A Cuban ballet school','A Broadway tap company'],correct:0,explain:'La Argentina combined regional Spanish traditions with sophisticated theatrical presentation, helping establish Spanish dance on international concert stages.',source:'https://www.britannica.com/biography/La-Argentina'},
+      {level:'connection',points:150,format:'match',q:'Which pair is correctly matched with institutions they founded?',a:['Tina Ramirez - Ballet Hispánico; Amalia Hernández - Ballet Folklórico de México','Paloma Herrera - Ballet Hispánico; Lucía Lacarra - Ballet Folklórico de México','Chita Rivera - National Ballet of Cuba; Jennifer Lopez - American Ballet Theatre','José Limón - Ballet Folklórico de México; Carlos Acosta - Ballet Hispánico'],correct:0,explain:'Tina Ramirez founded Ballet Hispánico, while Amalia Hernández founded Ballet Folklórico de México. Both institutions combine performance and education.',source:'https://www.ballethispanico.org/about/org/leadership-legacy/tina-ramirez-memorial/'},
+      {level:'connection',points:150,group:'gades-film',q:'Which artist is correctly paired with an important film collaborator?',a:['Antonio Gades - Carlos Saura','José Limón - Steven Spielberg','Alicia Alonso - Spike Lee','Sara Baras - Alfred Hitchcock'],correct:0,explain:'Antonio Gades and director Carlos Saura collaborated on influential dance films including Blood Wedding, Carmen and El amor brujo.',source:'https://fundacionantoniogades.com/en/antonio-gades/'},
+
+      {level:'challenge',points:150,q:'Which statement about “Hispanic” and “Latino/Latine” is most accurate?',a:['They overlap, but they do not always mean the same thing','They describe a person’s race','They name one dance style','They apply only to people born in the United States'],correct:0,explain:'Hispanic often relates to Spanish language or heritage, while Latino or Latine often relates to Latin America. People choose the identities they use.',source:'https://www.census.gov/topics/population/hispanic-origin/about.html'},
+      {level:'challenge',points:150,q:'Which approach best respects the diversity of Hispanic dance history?',a:['Name specific people, places and traditions','Call every form “Latin dance”','Guess identity from appearance','Treat one artist as representing everyone'],correct:0,explain:'Specificity matters. Naming artists, countries, communities and traditions avoids flattening many distinct histories into one generic category.',source:'https://latino.si.edu/learn/teaching-and-learning-resources'},
+      {level:'challenge',points:150,q:'Which featured flamenco artist received Spain’s Princess of Asturias Award for the Arts in 2022?',a:['María Pagés','Carmen Amaya','Sara Baras','Cristina Hoyos'],correct:0,explain:'María Pagés received the 2022 Princess of Asturias Award for the Arts for a career expanding flamenco through choreography, storytelling and collaboration.',source:'https://www.fpa.es/en/princess-of-asturias-awards/laureates/2022-maria-pages.html'}
+    ];
+
+    const topicMap = new Map([
+      ['Who founded Ballet Hispánico in New York in 1970?',['tina-ramirez','ballet-hispanico']],
+      ['José Limón is most closely connected to which area of dance history?',['jose-limon']],
+      ['Which artist helped build the company that became the National Ballet of Cuba?',['alicia-alonso','national-ballet-cuba']],
+      ['Amalia Hernández founded a company celebrated for presenting which traditions on the concert stage?',['amalia-hernandez','ballet-folklorico-mexico']],
+      ['Carmen Amaya became internationally famous for which dance tradition?',['carmen-amaya']],
+      ['Chita Rivera originated the Broadway role of Anita in which musical?',['chita-rivera']],
+      ['Paloma Herrera danced for 24 years with which major ballet company?',['paloma-herrera']],
+      ['Carlos Acosta built an international career primarily in which form?',['carlos-acosta']],
+      ['Which featured artist was widely known as “La Argentina”?',['antonia-merce']],
+      ['Which featured flamenco artist founded her own company in 1998?',['sara-baras']],
+      ['Jennifer Lopez first gained national television attention dancing with which group?',['jennifer-lopez']],
+      ['Which option correctly matches all three artists with their fields?',['alicia-alonso','jose-limon','chita-rivera']],
+      ['Which pair correctly matches a founder with the institution she created?',['tina-ramirez','ballet-hispanico']],
+      ['A trilogy of dance films brought Antonio Gades’s choreography to international movie audiences. Which director collaborated with him?',['antonio-gades','carlos-saura']],
+      ['What did Antonia Mercé, known as “La Argentina,” help establish?',['antonia-merce']],
+      ['Which pair is correctly matched with institutions they founded?',['tina-ramirez','ballet-hispanico','amalia-hernandez','ballet-folklorico-mexico']],
+      ['Which artist is correctly paired with an important film collaborator?',['antonio-gades','carlos-saura']],
+      ['Which featured flamenco artist received Spain’s Princess of Asturias Award for the Arts in 2022?',['maria-pages']]
+    ]);
+    questionBank.forEach(q=>q.topics=topicMap.get(q.q)||[]);
+
+    const familyBank = [
+      {q:'Can you find the ballet shoes?',say:'Can you find the ballet shoes?',choices:[{icon:'🩰',label:'Ballet shoes',correct:true},{icon:'⚽',label:'Ball'}],fact:'Alicia Alonso and Carlos Acosta became famous ballet dancers.'},
+      {q:'Can you find the foot making rhythm?',say:'Can you find the foot making rhythm?',choices:[{icon:'🦶',label:'Rhythm foot',correct:true},{icon:'✋',label:'Hand'}],fact:'Carmen Amaya became famous for the powerful rhythms in her flamenco dancing.'},
+      {q:'Can you find the theater masks?',say:'Can you find the theater masks?',choices:[{icon:'🎭',label:'Theater',correct:true},{icon:'🚲',label:'Bicycle'}],fact:'Chita Rivera brought unforgettable dancing characters to life on Broadway.'},
+      {q:'Can you find people together?',say:'Can you find people together?',choices:[{icon:'🧑‍🤝‍🧑',label:'Together',correct:true},{icon:'🧍',label:'One person'}],fact:'Tina Ramirez founded Ballet Hispánico, where dancers learn and perform together.'},
+      {q:'Can you find the storybook?',say:'Can you find the storybook?',choices:[{icon:'📖',label:'Story',correct:true},{icon:'🍎',label:'Apple'}],fact:'Antonio Gades showed how dance can tell stories onstage and in films.'}
+    ];
+
+    const screens={start:document.getElementById('startScreen'),family:document.getElementById('familyScreen'),familyResult:document.getElementById('familyResultScreen'),quiz:document.getElementById('quizScreen'),result:document.getElementById('resultScreen'),leaderboard:document.getElementById('leaderboardScreen')};
+    const progressTrack=document.getElementById('progressTrack'),progressBar=document.getElementById('progressBar');
+    let game=[],index=0,score=0,answered=false,lastScore=0,familyGame=[],familyIndex=0,familyAnswered=false;
+    const shuffle=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;};
+    function show(name){Object.values(screens).forEach(s=>s.classList.remove('active'));screens[name].classList.add('active');progressTrack.hidden=name!=='quiz';window.scrollTo(0,0);}
+    function pickUnique(pool,count,usedTopics){const picked=[];for(const q of shuffle(pool)){if(q.topics.some(topic=>usedTopics.has(topic)))continue;picked.push(q);q.topics.forEach(topic=>usedTopics.add(topic));if(picked.length===count)break;}return picked;}
+    function buildGame(){for(let attempt=0;attempt<100;attempt++){const topics=new Set();const challenge=pickUnique(questionBank.filter(q=>q.level==='challenge'),1,topics);const connections=pickUnique(questionBank.filter(q=>q.level==='connection'),3,topics);const easy=pickUnique(questionBank.filter(q=>q.level==='easy'),4,topics);if(challenge.length===1&&connections.length===3&&easy.length===4){game=shuffle([...easy,...connections,...challenge]);return;}}throw new Error('Could not create a varied quiz.');}
+    function startGame(){buildGame();index=0;score=0;answered=false;show('quiz');renderQuestion();}
+    function startFamily(){familyGame=shuffle(familyBank);familyIndex=0;familyAnswered=false;show('family');renderFamily();}
+    function renderFamily(){familyAnswered=false;const item=familyGame[familyIndex];document.getElementById('familyCount').textContent=`Picture ${familyIndex+1} of ${familyGame.length}`;document.getElementById('familyQuestion').textContent=item.q;const box=document.getElementById('familyAnswers');box.innerHTML='';shuffle(item.choices).forEach(choice=>{const button=document.createElement('button');button.className='answer family-choice';button.dataset.correct=String(Boolean(choice.correct));const picture=document.createElement('span');picture.className='picture';picture.textContent=choice.icon;picture.setAttribute('aria-hidden','true');const label=document.createElement('span');label.className='choice-label';label.textContent=choice.label;button.append(picture,label);button.addEventListener('click',()=>answerFamily(button));box.appendChild(button);});document.getElementById('familyFeedback').classList.remove('show');}
+    function answerFamily(selected){if(familyAnswered)return;familyAnswered=true;const item=familyGame[familyIndex];const buttons=[...document.querySelectorAll('#familyAnswers .answer')];buttons.forEach(button=>{button.disabled=true;if(button.dataset.correct==='true')button.classList.add('correct');});const correct=selected.dataset.correct==='true';if(!correct)selected.classList.add('incorrect');document.getElementById('familyFeedbackTitle').textContent=correct?'You found it!':'Good looking—here it is!';document.getElementById('familyFact').textContent=item.fact;document.getElementById('familyNext').textContent=familyIndex===familyGame.length-1?'See my stars':'Next picture';const feedback=document.getElementById('familyFeedback');feedback.classList.add('show');feedback.focus();}
+    function nextFamily(){if(!familyAnswered)return;if(familyIndex<familyGame.length-1){familyIndex++;renderFamily();}else{show('familyResult');}}
+    function speakFamily(){const item=familyGame[familyIndex];if(!item||!('speechSynthesis' in window))return;window.speechSynthesis.cancel();const voice=new SpeechSynthesisUtterance(item.say);voice.rate=.85;window.speechSynthesis.speak(voice);}
+    function addAnswerContent(button,text,format){if(format!=='match'){button.textContent=text;return;}button.classList.add('match-answer');text.split(';').forEach(item=>{const parts=item.trim().split(' - ');const row=document.createElement('span');row.className='pair-row';const name=document.createElement('span');name.className='pair-name';name.textContent=parts[0];const arrow=document.createElement('span');arrow.className='pair-arrow';arrow.textContent='→';arrow.setAttribute('aria-hidden','true');const value=document.createElement('span');value.className='pair-value';value.textContent=parts.slice(1).join(' - ');row.append(name,arrow,value);button.appendChild(row);});}
+    function renderQuestion(){answered=false;const q=game[index];document.getElementById('questionCount').textContent=`Question ${index+1} of 8`;document.getElementById('pointValue').textContent=`${q.points} points`;document.getElementById('questionText').textContent=q.q;progressBar.style.width=`${(index/8)*100}%`;const box=document.getElementById('answers');box.innerHTML='';const order=shuffle(q.a.map((text,i)=>({text,original:i})));order.forEach(opt=>{const b=document.createElement('button');b.className='answer';addAnswerContent(b,opt.text,q.format);b.dataset.correct=String(opt.original===q.correct);b.addEventListener('click',()=>answer(b));box.appendChild(b);});document.getElementById('feedback').classList.remove('show');}
+    function answer(selected){if(answered)return;answered=true;const q=game[index];const buttons=[...document.querySelectorAll('#answers .answer')];buttons.forEach(b=>{b.disabled=true;if(b.dataset.correct==='true')b.classList.add('correct');});const correct=selected.dataset.correct==='true';if(correct)score+=q.points;else selected.classList.add('incorrect');document.getElementById('feedbackTitle').textContent=correct?`Correct! +${q.points}`:'Not quite - here is the connection.';document.getElementById('feedbackText').textContent=q.explain;document.getElementById('sourceLink').href=q.source;document.getElementById('nextButton').textContent=index===7?'See my score':'Next';const fb=document.getElementById('feedback');fb.classList.add('show');fb.focus();}
+    function next(){if(!answered)return;if(index<7){index++;renderQuestion();}else{finish();}}
+    function finish(){lastScore=score;progressBar.style.width='100%';document.getElementById('finalScore').textContent=score;const msg=score>=850?'Outstanding. You connected artists, institutions and traditions across dance history.':score>=600?'Strong work. You recognized how Hispanic artists shaped many parts of dance history.':'You uncovered several important connections. Replay to meet a different mix of artists and ideas.';document.getElementById('resultMessage').textContent=msg;document.getElementById('initials').value='';document.getElementById('initialStatus').textContent='';document.getElementById('initialsBox').hidden=false;show('result');}
+    function normalizeInitials(value){return value.toUpperCase().replace(/[^A-Z]/g,'').slice(0,3);}
+    const blocked=['ASS','FAG','FCK','FUC','FUK','KKK','NIG','SEX','TIT','CUM','DCK','DIK','CNT','PNS','PIS','SHT','WTF'];
+    function validInitials(v){return /^[A-Z]{2,3}$/.test(v)&&!blocked.some(x=>v.includes(x));}
+    function saveScore(){const input=document.getElementById('initials'),status=document.getElementById('initialStatus');const initials=normalizeInitials(input.value);input.value=initials;if(!validInitials(initials)){status.textContent='Please choose 2-3 different, appropriate letters.';return;}const board=JSON.parse(localStorage.getItem('hpsdDanceBoard')||'[]');board.push({initials,score:lastScore,at:Date.now()});board.sort((a,b)=>b.score-a.score||a.at-b.at);localStorage.setItem('hpsdDanceBoard',JSON.stringify(board.slice(0,10)));status.style.color='var(--green)';status.textContent='Score saved on this device.';document.getElementById('initialsBox').hidden=true;}
+    function renderBoard(){const board=JSON.parse(localStorage.getItem('hpsdDanceBoard')||'[]');const target=document.getElementById('leaderboardContent');if(!board.length){target.innerHTML='<div class="empty">No scores yet. Be the first to play.</div>';return;}target.innerHTML='<table class="leaderboard"><thead><tr><th colspan="2">Player</th><th>Score</th></tr></thead><tbody>'+board.map((r,i)=>`<tr><td class="rank">${i+1}</td><td><strong>${r.initials}</strong></td><td>${r.score}</td></tr>`).join('')+'</tbody></table>';}
+    function showBoard(){renderBoard();show('leaderboard');}
+    document.getElementById('startButton').addEventListener('click',startGame);
+    document.getElementById('familyButton').addEventListener('click',startFamily);
+    document.getElementById('listenButton').addEventListener('click',speakFamily);
+    document.getElementById('familyNext').addEventListener('click',nextFamily);
+    document.getElementById('familyReplay').addEventListener('click',startFamily);
+    document.getElementById('familyMain').addEventListener('click',startGame);
+    document.getElementById('nextButton').addEventListener('click',next);
+    document.getElementById('replayButton').addEventListener('click',startGame);
+    document.getElementById('leaderReplay').addEventListener('click',startGame);
+    document.getElementById('leaderboardButton').addEventListener('click',showBoard);
+    document.getElementById('backToResults').addEventListener('click',()=>show('result'));
+    document.getElementById('saveScore').addEventListener('click',saveScore);
+    document.getElementById('initials').addEventListener('input',e=>e.target.value=normalizeInitials(e.target.value));
+    document.getElementById('initials').addEventListener('keydown',e=>{if(e.key==='Enter')saveScore();});
+  </script>
+</body>
+</html>
