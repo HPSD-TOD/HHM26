@@ -99,19 +99,7 @@
     .result-number { font-size:clamp(4rem,16vw,7.8rem); line-height:.9; font-weight:900; color:var(--coral); letter-spacing:-.06em; }
     .result-of { color:var(--muted); font-weight:800; font-size:1.05rem; }
     .result-message { font-size:1.15rem; line-height:1.5; max-width:590px; margin-top:22px; }
-    .initials-box { margin-top:22px; background:white; border:1px solid #dfd1c6; border-radius:18px; padding:18px; }
-    .initials-box label { display:block; font-weight:850; margin-bottom:9px; }
-    .initial-row { display:flex; gap:10px; }
-    #initials { width:112px; text-transform:uppercase; letter-spacing:.18em; border:2px solid #cdbdb2; border-radius:12px; padding:12px; font-weight:900; font-size:1.05rem; }
-    .micro { color:var(--muted); font-size:.82rem; line-height:1.4; margin:9px 0 0; }
-    .status { min-height:20px; color:#a72820; font-weight:750; font-size:.86rem; margin-top:7px; }
     .result-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
-    .leaderboard { width:100%; border-collapse:collapse; margin-top:16px; background:white; border-radius:16px; overflow:hidden; }
-    .leaderboard th,.leaderboard td { padding:12px 14px; border-bottom:1px solid #eadfd4; text-align:left; }
-    .leaderboard th:last-child,.leaderboard td:last-child { text-align:right; }
-    .leaderboard tr:last-child td { border:0; }
-    .rank { color:var(--coral); font-weight:900; width:52px; }
-    .empty { padding:28px; text-align:center; background:white; border-radius:16px; color:var(--muted); }
     .footer-note { margin-top:auto; padding-top:22px; color:var(--muted); font-size:.82rem; }
     [hidden] { display:none !important; }
     @media (max-width:620px) {
@@ -126,8 +114,6 @@
       .family-actions { flex-direction:column; }
       .primary { width:100%; }
       .feedback-footer { align-items:flex-end; }
-      .initial-row { flex-wrap:wrap; }
-      .initial-row .secondary { flex:1; }
     }
     @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }
   </style>
@@ -189,22 +175,8 @@
           <p class="eyebrow">Your score</p>
           <div><span class="result-number" id="finalScore">0</span> <span class="result-of">/ 1,000</span></div>
           <p class="result-message" id="resultMessage"></p>
-          <div class="initials-box" id="initialsBox">
-            <label for="initials">Add your initials to this device's leaderboard</label>
-            <div class="initial-row"><input id="initials" maxlength="3" inputmode="text" autocomplete="off" aria-describedby="initialHelp"><button class="secondary" id="saveScore">Save score</button></div>
-            <p class="micro" id="initialHelp">Use 2-3 letters only. Do not enter a full name. This prototype does not share scores between devices.</p>
-            <div class="status" id="initialStatus" role="status"></div>
-          </div>
-          <div class="result-actions"><button class="primary" id="replayButton">Play again</button><button class="secondary" id="leaderboardButton">View leaderboard</button></div>
+          <div class="result-actions"><button class="primary" id="replayButton">Play again</button></div>
           <p class="footer-note">Every answer includes a learning note. Browse the Hispanic Heritage Month bulletin board to meet more featured artists.</p>
-        </section>
-
-        <section class="screen" id="leaderboardScreen">
-          <p class="eyebrow">On this device</p>
-          <h2>Leaderboard</h2>
-          <div id="leaderboardContent"></div>
-          <div class="result-actions"><button class="primary" id="leaderReplay">Play again</button><button class="secondary" id="backToResults">Back to score</button></div>
-          <p class="footer-note">The shared Google Sites version will use a moderated Google Sheet leaderboard. This prototype stores only initials and scores in this browser.</p>
         </section>
       </main>
     </section>

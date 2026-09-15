@@ -225,15 +225,16 @@ const photoCredits={
   'alicia-alonso':'Public domain / Wikimedia Commons','paloma-herrera':'Embajada de EEUU en la Argentina / CC BY 2.0 / Wikimedia Commons','carlos-acosta':'Pedro J Pacheco / CC BY-SA 4.0 / Wikimedia Commons','lucia-lacarra':'CC BY-SA 4.0 / Wikimedia Commons','tamara-rojo':'Erik Doble / CC BY-SA 4.0 / Wikimedia Commons','chita-rivera':'Kingkongphoto / CC BY-SA 2.0 / Wikimedia Commons','jennifer-lopez':'Everwest / CC BY 4.0 / Wikimedia Commons','jose-limon':'Unknown photographer / Public domain / Wikimedia Commons','nacho-duato':'Rodrigo Fernández / CC BY-SA 3.0 / Wikimedia Commons','blanca-li':'Ali Mahdavi / CC BY-SA 3.0 / Wikimedia Commons','tina-ramirez':'Vbh massistant / CC BY-SA 4.0 / Wikimedia Commons','amalia-hernandez':'Rob Mieremet / Anefo / CC0 / Wikimedia Commons','carmen-amaya':'ArmKa / CC BY-SA 4.0 / Wikimedia Commons','antonia-merce':"Studio d'Ora, Paris / Public domain / Wikimedia Commons",'antonio-gades':'Unknown photographer / Public domain / Wikimedia Commons','cristina-hoyos':'Ministerio de Cultura de la Nación / CC BY-SA 2.0 / Wikimedia Commons','sara-baras':'TheOm3ga / CC BY-SA 3.0 / Wikimedia Commons','israel-galvan':'MITO SettembreMusica / CC BY 2.0 / Wikimedia Commons','maria-pages':'Junta de Andalucía / CC BY-SA 2.0 / Wikimedia Commons','joaquin-cortes':'Roberto Santorini / CC BY-SA 2.0 / Wikimedia Commons'
 };
 people.forEach(person=>person.credit=photoCredits[person.id]);
+localStorage.removeItem('hpsdDanceBoard');
 
 const screens={
   start:document.getElementById('startScreen'), family:document.getElementById('familyScreen'),
   familyResult:document.getElementById('familyResultScreen'), quiz:document.getElementById('quizScreen'),
-  result:document.getElementById('resultScreen'), leaderboard:document.getElementById('leaderboardScreen')
+  result:document.getElementById('resultScreen')
 };
 const progressTrack=document.getElementById('progressTrack');
 const progressBar=document.getElementById('progressBar');
-let game=[],index=0,score=0,answered=false,lastScore=0;
+let game=[],index=0,score=0,answered=false;
 let familyGame=[],familyIndex=0,familyTarget=null;
 let activeUtterance=null,activePauseButton=null;
 let starTimers=[];
@@ -292,9 +293,9 @@ function answer(selected){
 }
 function next(){if(!answered)return;if(index<7){index++;renderQuestion();}else finish();}
 function finish(){
-  lastScore=score;progressBar.style.width='100%';document.getElementById('finalScore').textContent=score;
+  progressBar.style.width='100%';document.getElementById('finalScore').textContent=score;
   const msg=score>=875?'Outstanding. You connected eight different artists with their contributions.':score>=625?'Strong work. You met eight different artists who shaped dance history.':'You met eight important artists. Replay to discover more of the full group.';
-  document.getElementById('resultMessage').textContent=msg;document.getElementById('initials').value='';document.getElementById('initialStatus').textContent='';document.getElementById('initialsBox').hidden=false;show('result');
+  document.getElementById('resultMessage').textContent=msg;show('result');
 }
 
 function startFamily(){const categories=['ballet','stage','modern','founders','spanish'];familyGame=shuffle(categories.map(category=>{const pool=people.filter(person=>person.category===category);return takeFromRotation(`hpsdFamilyRotation-${category}`,1,pool)[0];}));familyIndex=0;show('family');renderFamilyMeet();}
@@ -360,22 +361,9 @@ function lightFamilyStars(){
 }
 function nextFamily(){if(familyIndex<familyGame.length-1){familyIndex++;renderFamilyMeet();}else{show('familyResult');lightFamilyStars();}}
 
-function normalizeInitials(value){return value.toUpperCase().replace(/[^A-Z]/g,'').slice(0,3);}
-const blocked=['ASS','FAG','FCK','FUC','FUK','KKK','NIG','SEX','TIT','CUM','DCK','DIK','CNT','PNS','PIS','SHT','WTF'];
-function validInitials(v){return /^[A-Z]{2,3}$/.test(v)&&!blocked.some(x=>v.includes(x));}
-function saveScore(){const input=document.getElementById('initials'),status=document.getElementById('initialStatus');const initials=normalizeInitials(input.value);input.value=initials;if(!validInitials(initials)){status.textContent='Please choose 2–3 different, appropriate letters.';return;}const board=JSON.parse(localStorage.getItem('hpsdDanceBoard')||'[]');board.push({initials,score:lastScore,at:Date.now()});board.sort((a,b)=>b.score-a.score||a.at-b.at);localStorage.setItem('hpsdDanceBoard',JSON.stringify(board.slice(0,10)));status.style.color='var(--green)';status.textContent='Score saved on this device.';document.getElementById('initialsBox').hidden=true;}
-function renderBoard(){const board=JSON.parse(localStorage.getItem('hpsdDanceBoard')||'[]');const target=document.getElementById('leaderboardContent');if(!board.length){target.innerHTML='<div class="empty">No scores yet. Be the first to play.</div>';return;}target.innerHTML='<table class="leaderboard"><thead><tr><th colspan="2">Player</th><th>Score</th></tr></thead><tbody>'+board.map((r,i)=>`<tr><td class="rank">${i+1}</td><td><strong>${r.initials}</strong></td><td>${r.score}</td></tr>`).join('')+'</tbody></table>';}
-function showBoard(){renderBoard();show('leaderboard');}
-
 document.getElementById('startButton').addEventListener('click',startGame);
 document.getElementById('familyButton').addEventListener('click',startFamily);
 document.getElementById('nextButton').addEventListener('click',next);
 document.getElementById('replayButton').addEventListener('click',startGame);
-document.getElementById('leaderReplay').addEventListener('click',startGame);
 document.getElementById('familyReplay').addEventListener('click',startFamily);
 document.getElementById('familyMain').addEventListener('click',startGame);
-document.getElementById('leaderboardButton').addEventListener('click',showBoard);
-document.getElementById('backToResults').addEventListener('click',()=>show('result'));
-document.getElementById('saveScore').addEventListener('click',saveScore);
-document.getElementById('initials').addEventListener('input',e=>e.target.value=normalizeInitials(e.target.value));
-document.getElementById('initials').addEventListener('keydown',e=>{if(e.key==='Enter')saveScore();});
